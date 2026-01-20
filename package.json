@@ -9,13 +9,32 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "leetcode-timer",
+          "title": "Leetcode timer",
+          "icon": "resources/time-svgrepo-com.svg"
+        }
+      ]
+    },
+    "views": {
+      "leetcode-timer": [
+        {
+          "type": "webview",
+          "id": "timer-controls",
+          "name": "Timer Controls"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "leetcode-vscode-timer.helloWorld",
-        "title": "Hello World"
+        "command": "leetcode-vscode-timer.startTask",
+        "title": "Start leetcode task"
       }
     ]
   },

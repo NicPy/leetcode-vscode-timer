@@ -1,26 +1,63 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import {TimerViewProvider} from './TimerViewProvider';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+let timerStatusBarItem: vscode.StatusBarItem;
+let timerInterval: NodeJS.Timeout | undefined;
+let remainingSeconds: number = 0;
+
 export function activate(context: vscode.ExtensionContext) {
+    // 1. Create the Status Bar Item
+    timerStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    context.subscriptions.push(timerStatusBarItem);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "leetcode-vscode-timer" is now active!');
+    // 2. Register the "Start Timer" command
+    let startTimer = vscode.commands.registerCommand('leetcode-vscode-timer.startTask', async () => {
+        const input = await vscode.window.showInputBox({
+            prompt: "Enter task duration in minutes",
+            placeHolder: "e.g. 40"
+        });
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('leetcode-vscode-timer.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from leetcode-vscode-timer!');
-	});
+        if (input) {
+            startCountdown(parseInt(input) * 60);
+        }
+    });
 
-	context.subscriptions.push(disposable);
+    context.subscriptions.push(startTimer);
+
+	// 3. Register the timer view
+	const provider = new TimerViewProvider(context.extensionUri);
+
+	context.subscriptions.push(vscode.window.registerWebviewViewProvider(TimerViewProvider.viewType, provider));
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+function startCountdown(seconds: number) {
+    remainingSeconds = seconds;
+    
+    // Clear any existing timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
+    timerStatusBarItem.show();
+
+    timerInterval = setInterval(() => {
+        remainingSeconds--;
+
+        if (remainingSeconds <= 0) {
+            if (timerInterval) { clearInterval(timerInterval); }
+            timerStatusBarItem.text = "$(check) Time's Up!";
+            vscode.window.showErrorMessage("Task time is over! Stop coding.");
+        } else {
+            const mins = Math.floor(remainingSeconds / 60);
+            const secs = remainingSeconds % 60 ;
+            // $(watch) is a built-in VS Code icon ID
+            timerStatusBarItem.text = `$(watch) ${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+    }, 1000);
+}
+
+export function deactivate() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+}
