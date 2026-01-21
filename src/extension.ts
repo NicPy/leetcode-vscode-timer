@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {TimerViewProvider} from './TimerViewProvider';
+import { START_LEETCODE_TIMER_COMMAND } from './constants/commands';
 
 let timerStatusBarItem: vscode.StatusBarItem;
 let timerInterval: NodeJS.Timeout | undefined;
@@ -11,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(timerStatusBarItem);
 
     // 2. Register the "Start Timer" command
-    let startTimer = vscode.commands.registerCommand('leetcode-vscode-timer.startTask', async () => {
+    let startTimer = vscode.commands.registerCommand(START_LEETCODE_TIMER_COMMAND, async () => {
         const input = await vscode.window.showInputBox({
             prompt: "Enter task duration in minutes",
             placeHolder: "e.g. 40"

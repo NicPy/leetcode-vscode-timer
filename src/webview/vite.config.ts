@@ -11,7 +11,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        // format: 'iife',
+        format: 'iife',
         entryFileNames: 'index.js',
         assetFileNames: 'assetrs.[ext]'
       }
