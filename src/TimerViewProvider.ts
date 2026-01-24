@@ -1,14 +1,19 @@
 import * as vscode from 'vscode';
-import { START_LEETCODE_TIMER_COMMAND, STOP_LEETCODE_TIMER_COMMAND } from './constants/commands';
+import { START_LEETCODE_TIMER_COMMAND, STOP_LEETCODE_TIMER_COMMAND, UPDATE_WEBVIEW_TIMER_COMMAND } from './constants/commands';
 import { getNonce } from './utils/string.utils';
 
 
 export class TimerViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'timer-controls';
+    private _webview: vscode.Webview | undefined;
+    public static currentWebview: vscode.Webview | undefined;
 
     constructor(private readonly _extensionUri: vscode.Uri) { }
 
     async resolveWebviewView(webviewView: vscode.WebviewView) {
+        this._webview = webviewView.webview;
+        TimerViewProvider.currentWebview = webviewView.webview; // Set the static reference
+
         webviewView.webview.options = { enableScripts: true };
 
         // webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
