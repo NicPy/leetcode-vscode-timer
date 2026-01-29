@@ -1,27 +1,17 @@
-import { h } from 'preact';
+import { createContext, h } from 'preact';
 import {setup} from 'goober'
-import { useState, useEffect } from 'preact/hooks';
-import { TaskItem } from './components/TaskItem';
+import { useState, useEffect, useContext } from 'preact/hooks';
+import { TaskItemsList } from './components/TaskItemsList';
+import { theme } from './theme';
 
-setup(h)
 
-const DUMMY_ITEMS = [
-  {
-    id: 1,
-    name: "First Task",
-    goalTime: 600000, // 10 min
-    timeConsumed: 300000, // 5 min
-    status: 'in_progress'
-  },
-  {
-    id: 2,
-    name: "Second Task",
-    goalTime: 600000, // 10 min
-    timeConsumed: 300000, // 5 min
-    status: 'completed'
-  },
-]
+const ThemeContext = createContext(theme);
+const useTheme = () => useContext(ThemeContext);
+
+setup(h, undefined, useTheme)
+
 // declare const acquireVsCodeApi: any;
+const acquireVsCodeApi = () => { }
 const vscode = acquireVsCodeApi();
 
 export function App() {
@@ -65,12 +55,7 @@ export function App() {
           {taskName}: {formatTime(remainingSeconds)}
         </div>
       )}
-      <div>
-        {DUMMY_ITEMS.map((data) =>
-
-          <TaskItem {...data as any} />
-        )}
-      </div>
+      
       <label htmlFor="taskName">Task Name2</label>
       <input
         type="text"
@@ -93,6 +78,8 @@ export function App() {
         <button onClick={handleStart} disabled={isTimerActive}>Start</button>
         <button onClick={handleStop} disabled={!isTimerActive}>Stop</button>
       </div>
+
+      <TaskItemsList />
 
     </div>
   );

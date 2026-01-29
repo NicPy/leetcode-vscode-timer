@@ -4,13 +4,15 @@ import { getButtonURL } from "./ActionButton.const";
 
 const Icon = styled('img')`
     width: 32px;
-    heignt: 32px;
+    height: 32px;
 `
 const Button = styled('button')`
+    padding: 0;
+    border-radius: 50%;
+    background: none;
     
     &:hover ${Icon} {
-        background: #a5abb0;
-        border-radius: 50%;
+        cursor: pointer;
     }
 
 `;
