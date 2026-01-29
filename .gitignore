@@ -139,8 +139,9 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 
-# System foldersa
+# System folders
 .DS_Store
+.idea
 
 # UI generated output
  webview-dist

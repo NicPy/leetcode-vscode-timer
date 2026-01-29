@@ -1,7 +1,27 @@
-
+import { h } from 'preact';
+import {setup} from 'goober'
 import { useState, useEffect } from 'preact/hooks';
+import { TaskItem } from './components/TaskItem';
 
-declare const acquireVsCodeApi: any;
+setup(h)
+
+const DUMMY_ITEMS = [
+  {
+    id: 1,
+    name: "First Task",
+    goalTime: 600000, // 10 min
+    timeConsumed: 300000, // 5 min
+    status: 'in_progress'
+  },
+  {
+    id: 2,
+    name: "Second Task",
+    goalTime: 600000, // 10 min
+    timeConsumed: 300000, // 5 min
+    status: 'completed'
+  },
+]
+// declare const acquireVsCodeApi: any;
 const vscode = acquireVsCodeApi();
 
 export function App() {
@@ -39,60 +59,41 @@ export function App() {
 
   return (
     <div style={{ padding: '10px' }}>
-      <style>
-        {`
-          body { color: var(--vscode-foreground); font-family: var(--vscode-font-family); }
-          input { 
-            width: 100%; box-sizing: border-box; 
-            background: var(--vscode-input-background); 
-            color: var(--vscode-input-foreground); 
-            border: 1px solid var(--vscode-input-border);
-            padding: 4px; margin-bottom: 10px;
-          }
-          button {
-            flex: 1; cursor: pointer;
-            background: var(--vscode-button-background);
-            color: var(--vscode-button-foreground);
-            border: none; padding: 6px;
-          }
-          button:hover { background: var(--vscode-button-hoverBackground); }
-          .timer-display {
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 15px;
-          }
-        `}
-      </style>
+
       {isTimerActive && (
-        <div class="timer-display">
+        <div className="timer-display">
           {taskName}: {formatTime(remainingSeconds)}
         </div>
       )}
-      <label htmlFor="taskName">Task Name1</label>
-      <input 
-        type="text" 
-        id="taskName" 
-        placeholder="e.g. Two Sum" 
+      <div>
+        {DUMMY_ITEMS.map((data) =>
+
+          <TaskItem {...data as any} />
+        )}
+      </div>
+      <label htmlFor="taskName">Task Name2</label>
+      <input
+        type="text"
+        id="taskName"
+        placeholder="e.g. Two Sum"
         value={taskName}
         onInput={(e) => setTaskName(e.currentTarget.value)}
         disabled={isTimerActive}
       />
       <label htmlFor="duration">Duration (minutes)</label>
-      <input 
-        type="number" 
-        id="duration" 
+      <input
+        type="number"
+        id="duration"
         value={duration}
         onInput={(e) => setDuration(parseInt(e.currentTarget.value))}
         min="1"
         disabled={isTimerActive}
       />
-      <div style={{ display: 'flex', gap: '8px' }}>
+      <div className="buttons-wrapper">
         <button onClick={handleStart} disabled={isTimerActive}>Start</button>
         <button onClick={handleStop} disabled={!isTimerActive}>Stop</button>
       </div>
-      
+
     </div>
   );
 }

@@ -40,10 +40,12 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "build:webview": "cd src/webview && npm run build",
-    "run:webview": "cd src/webview && npm run dev",
     "build:all": "npm run build:webview && npm run compile",
     "compile": "tsc -p ./",
+    "dev:webview": "cd src/webview && npm run dev",
     "watch": "tsc -watch -p ./",
+    "watch:webview": "cd src/webview && npm run watch",
+    "watch:all": "npm run watch & npm run watch:webview",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test"
@@ -54,9 +56,10 @@
     "@types/vscode": "^1.108.1",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.2",
+    "preact": "^10.28.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.52.0",
-    "preact": "^10.28.2"
+    "typescript-eslint": "^8.52.0"
   }
 }
